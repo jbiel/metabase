@@ -11,7 +11,7 @@ import { push } from "react-router-redux";
 import { t } from "ttag";
 import _ from "underscore";
 
-import { useMount, useUnmount, usePrevious } from "react-use";
+import { useMount, useUnmount, usePrevious, useBeforeUnload } from "react-use";
 import { PLUGIN_SELECTORS } from "metabase/plugins";
 import Bookmark from "metabase/entities/bookmarks";
 import Collections from "metabase/entities/collections";
@@ -217,7 +217,10 @@ function QueryBuilder(props) {
     showTimelinesForCollection,
     card,
     isLoadingComplete,
+    isDirty,
   } = props;
+
+  useBeforeUnload(isDirty && isNativeEditorOpen, "You have unsaved changes.");
 
   const forceUpdate = useForceUpdate();
   const forceUpdateDebounced = useMemo(
