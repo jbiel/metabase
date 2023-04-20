@@ -218,9 +218,8 @@ function QueryBuilder(props) {
     card,
     isLoadingComplete,
     isDirty,
+    isNew,
   } = props;
-
-  useBeforeUnload(isDirty && isNativeEditorOpen, "You have unsaved changes.");
 
   const forceUpdate = useForceUpdate();
   const forceUpdateDebounced = useMemo(
@@ -300,6 +299,11 @@ function QueryBuilder(props) {
     window.addEventListener("resize", forceUpdateDebounced);
     return () => window.removeEventListener("resize", forceUpdateDebounced);
   }, []);
+
+  useBeforeUnload(
+    !isNew && isDirty && isNativeEditorOpen,
+    "You have unsaved changes.",
+  );
 
   useUnmount(() => {
     cancelQuery();
