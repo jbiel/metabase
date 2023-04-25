@@ -11,7 +11,7 @@ import { push } from "react-router-redux";
 import { t } from "ttag";
 import _ from "underscore";
 
-import { useMount, useUnmount, usePrevious, useBeforeUnload } from "react-use";
+import { useMount, useUnmount, usePrevious } from "react-use";
 import { PLUGIN_SELECTORS } from "metabase/plugins";
 import Bookmark from "metabase/entities/bookmarks";
 import Collections from "metabase/entities/collections";
@@ -35,6 +35,7 @@ import title from "metabase/hoc/Title";
 import titleWithLoadingTime from "metabase/hoc/TitleWithLoadingTime";
 import favicon from "metabase/hoc/Favicon";
 
+import useBeforeUnload from "metabase/hooks/use-before-unload";
 import View from "../components/view/View";
 
 import {
@@ -218,7 +219,6 @@ function QueryBuilder(props) {
     card,
     isLoadingComplete,
     isDirty,
-    isNew,
   } = props;
 
   const forceUpdate = useForceUpdate();
@@ -300,10 +300,7 @@ function QueryBuilder(props) {
     return () => window.removeEventListener("resize", forceUpdateDebounced);
   }, []);
 
-  useBeforeUnload(
-    !isNew && isDirty && isNativeEditorOpen,
-    "You have unsaved changes.",
-  );
+  useBeforeUnload(isDirty && isNativeEditorOpen);
 
   useUnmount(() => {
     cancelQuery();
