@@ -185,7 +185,7 @@
   (with-mongo-connection [^com.mongodb.DB conn database]
     (let [build-info (mg/command conn {:buildInfo 1})]
       {:version (get build-info "version")
-       :semantic-version (get build-info "versionArray")})))
+       :semantic-version (drop-last (get build-info "versionArray"))})))
 
 (defmethod driver/describe-database :mongo
   [_ database]
